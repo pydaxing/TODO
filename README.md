@@ -57,6 +57,19 @@
 
 ---
 
+## 本地开发
+
+```bash
+pnpm install    # 安装依赖
+pnpm dev        # 启动开发服务器（端口 8080）
+pnpm build      # 构建生产版本，生成 dist/ 目录
+pnpm lint       # 代码检查
+```
+
+> 本地 API 开发需要 PHP + MySQL 环境，推荐使用 MAMP/XAMPP。
+
+---
+
 ## 部署指南（阿里云 + 宝塔面板）
 
 ### 第一步：阿里云环境准备
@@ -98,6 +111,19 @@ define('DB_CHARSET', 'utf8mb4');        // 字符集，保持默认
 - `dist/` 目录下所有文件
 - `api/` 整个目录
 
+**上传后的目录结构：**
+```
+/www/wwwroot/todo.你的域名.com/
+├── index.html          # 前端入口
+├── assets/             # 前端资源（JS/CSS）
+└── api/                # 后端 API
+    ├── config.php
+    ├── init.php
+    ├── tasks.php
+    ├── whiteboards.php
+    └── settings.php
+```
+
 ### 第六步：初始化数据库
 
 访问 `https://你的域名/api/init.php`，看到成功提示即可。
@@ -110,78 +136,11 @@ define('DB_CHARSET', 'utf8mb4');        // 字符集，保持默认
 
 ## 常见问题
 
-### Q1: 页面空白或报错
-**检查步骤：**
-1. 浏览器 F12 查看 Console 错误
-2. 检查 `api/config.php` 数据库配置是否正确
-3. 访问 `/api/init.php` 确认数据库初始化
-
-### Q2: API 返回 500 错误
-**解决方案：**
-1. 检查 PHP 版本是否 7.4+
-2. 确认 `pdo_mysql` 扩展已安装
-3. 查看宝塔「网站日志」获取详细错误
-
-### Q3: 头像上传失败
-**原因：** 图片太大
-**解决：** 图片限制 2MB 以内
-
-### Q4: 跨域问题
-**解决：** `api/config.php` 已包含 CORS 头配置，无需额外设置
-
----
-
-## 本地开发
-
-```bash
-# 安装依赖
-pnpm install
-
-# 启动开发服务器（端口 8080）
-pnpm dev
-
-# 构建生产版本
-pnpm build
-
-# 代码检查
-pnpm lint
-```
-
-### 本地 API 开发
-需要本地 PHP + MySQL 环境，推荐使用 MAMP/XAMPP。
-
----
-
-## 项目结构
-
-```
-├── api/                    # PHP 后端 API
-│   ├── config.php          # 数据库配置
-│   ├── init.php            # 初始化数据库表
-│   ├── tasks.php           # 任务 CRUD
-│   ├── whiteboards.php     # 白板 CRUD
-│   └── settings.php        # 设置 CRUD
-├── src/
-│   ├── components/         # React 组件
-│   │   ├── ui/             # shadcn/ui 基础组件
-│   │   ├── TaskItem.jsx    # 任务卡片
-│   │   ├── TaskDialog.jsx  # 任务编辑弹窗
-│   │   ├── TaskCalendar.jsx# 任务日历
-│   │   ├── TagManager.jsx  # 标签管理
-│   │   └── Whiteboard.jsx  # 灵感白板
-│   ├── contexts/
-│   │   └── AppContext.jsx  # 应用上下文
-│   ├── hooks/
-│   │   ├── useTasks.js     # 任务操作 Hook
-│   │   └── useWhiteboards.js
-│   ├── lib/
-│   │   ├── api.js          # API 请求封装
-│   │   └── utils.js        # 工具函数
-│   └── pages/
-│       └── Index.jsx       # 主页面
-├── dist/                   # 构建输出
-└── public/                 # 静态资源
-```
+| 问题 | 解决方案 |
+|------|----------|
+| 页面空白 | 检查 `api/config.php` 数据库配置，访问 `/api/init.php` 初始化 |
+| API 返回 500 | 检查 PHP 版本 7.4+，确认 `pdo_mysql` 扩展已安装 |
+| 头像上传失败 | 图片限制 2MB 以内 |
 
 ---
 
