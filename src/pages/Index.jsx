@@ -76,7 +76,6 @@ const Index = () => {
 
   // View mode
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'calendar'
-  const [viewPopoverOpen, setViewPopoverOpen] = useState(false);
   const [userPopoverOpen, setUserPopoverOpen] = useState(false);
 
   // Settings form
@@ -290,42 +289,15 @@ const Index = () => {
         <div className="flex-shrink-0 px-4 py-6">
           <div className={`${whiteboardOpen ? '' : 'max-w-[1400px] mx-auto'}`}>
             <div className="flex items-start justify-between mb-6">
-              {/* 左上角：标题 + 视角切换 */}
+              {/* 左上角：标题 + 视角标签 */}
               <div>
-                <div className="relative">
-                  <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient">
-                    TODO
-                  </h1>
-                  <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-full opacity-50"></div>
-                </div>
-                <Popover open={viewPopoverOpen} onOpenChange={setViewPopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" className="mt-3 h-auto px-2 py-1 text-muted-foreground hover:text-foreground">
-                      <span className="text-sm">{viewMode === 'list' ? '列表视角' : '日历视角'}</span>
-                      <ChevronDown className="h-4 w-4 ml-1" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-36" align="start">
-                    <div className="space-y-1">
-                      <Button
-                        variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-                        className="w-full justify-start"
-                        onClick={() => { setViewMode('list'); setViewPopoverOpen(false); }}
-                      >
-                        <List className="h-4 w-4 mr-2" />
-                        列表视角
-                      </Button>
-                      <Button
-                        variant={viewMode === 'calendar' ? 'secondary' : 'ghost'}
-                        className="w-full justify-start"
-                        onClick={() => { setViewMode('calendar'); setViewPopoverOpen(false); }}
-                      >
-                        <Calendar className="h-4 w-4 mr-2" />
-                        日历视角
-                      </Button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient">
+                  TODO
+                </h1>
+                <span className="inline-block mt-2 px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                  {viewMode === 'list' ? '列表视角' : '日历视角'}
+                </span>
+                <div className="mt-2 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-full opacity-50" style={{ width: '120px' }}></div>
               </div>
 
               {/* 右上角：用户头像 + 用户名 */}
@@ -344,8 +316,28 @@ const Index = () => {
                     </div>
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-40" align="end">
+                <PopoverContent className="w-44" align="end">
                   <div className="space-y-1">
+                    {/* 视角切换 */}
+                    <div className="pb-2 mb-2 border-b space-y-1">
+                      <Button
+                        variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+                        className="w-full justify-start"
+                        onClick={() => { setViewMode('list'); setUserPopoverOpen(false); }}
+                      >
+                        <List className="h-4 w-4 mr-2" />
+                        列表视角
+                      </Button>
+                      <Button
+                        variant={viewMode === 'calendar' ? 'secondary' : 'ghost'}
+                        className="w-full justify-start"
+                        onClick={() => { setViewMode('calendar'); setUserPopoverOpen(false); }}
+                      >
+                        <Calendar className="h-4 w-4 mr-2" />
+                        日历视角
+                      </Button>
+                    </div>
+                    {/* 其他菜单 */}
                     <Button
                       variant="ghost"
                       className="w-full justify-start"
