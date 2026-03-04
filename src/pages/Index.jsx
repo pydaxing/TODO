@@ -298,19 +298,21 @@ const Index = () => {
               {/* User Profile */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" className="h-auto p-3 hover:bg-accent">
-                    <div className="flex flex-col items-center gap-1">
-                      <Avatar className="h-12 w-12">
+                  <Button variant="ghost" className="h-auto p-2 hover:bg-accent">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
                         <AvatarImage src={user?.avatar_url} alt={user?.name} />
                         <AvatarFallback>
-                          <User className="h-6 w-6" />
+                          <User className="h-5 w-5" />
                         </AvatarFallback>
                       </Avatar>
-                      <span className="font-medium text-sm">{user?.name || '我'}</span>
-                      <span className="text-xs text-muted-foreground flex items-center gap-1">
-                        {viewMode === 'list' ? '列表视角' : '日历视角'}
-                        <ChevronDown className="h-3 w-3" />
-                      </span>
+                      <div className="flex flex-col items-start">
+                        <span className="font-medium text-sm">{user?.name || '我'}</span>
+                        <span className="text-xs text-muted-foreground flex items-center gap-1">
+                          {viewMode === 'list' ? '列表视角' : '日历视角'}
+                          <ChevronDown className="h-3 w-3" />
+                        </span>
+                      </div>
                     </div>
                   </Button>
                 </PopoverTrigger>
