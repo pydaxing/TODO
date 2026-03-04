@@ -292,7 +292,16 @@ const Index = () => {
               </div>
 
               {/* User Profile */}
-              <div className="flex flex-col items-end gap-1">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 rounded-full"
+                  onClick={() => setCalendarOpen(true)}
+                  title="我的日历"
+                >
+                  <Calendar className="h-5 w-5" />
+                </Button>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="ghost" className="h-auto p-2 hover:bg-accent">
@@ -328,14 +337,6 @@ const Index = () => {
                     </div>
                   </PopoverContent>
                 </Popover>
-                <Button
-                  variant="link"
-                  className="text-xs text-muted-foreground h-auto p-0 pr-2"
-                  onClick={() => setCalendarOpen(true)}
-                >
-                  <Calendar className="h-3 w-3 mr-1" />
-                  我的日历
-                </Button>
               </div>
             </div>
           </div>
