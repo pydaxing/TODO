@@ -57,50 +57,6 @@
 
 ---
 
-## 数据模型
-
-### tasks 表（任务）
-```sql
-CREATE TABLE tasks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    status ENUM('todo', 'in_progress', 'completed', 'paused') DEFAULT 'todo',
-    progress INT DEFAULT 0,
-    deadline DATETIME,
-    tags JSON,
-    attachments JSON,
-    is_recurring TINYINT DEFAULT 0,
-    recurrence_type VARCHAR(20),
-    recurrence_end_date DATE,
-    last_recurrence_date DATE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-```
-
-### whiteboards 表（白板）
-```sql
-CREATE TABLE whiteboards (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    content TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-```
-
-### settings 表（设置）
-```sql
-CREATE TABLE settings (
-    `key` VARCHAR(100) PRIMARY KEY,
-    `value` LONGTEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-```
-
----
-
 ## 部署指南（阿里云 + 宝塔面板）
 
 ### 第一步：阿里云环境准备
