@@ -13,6 +13,7 @@ import ProgressDialog from '@/components/ProgressDialog';
 import StatsCard from '@/components/StatsCard';
 import Whiteboard from '@/components/Whiteboard';
 import TaskCalendar from '@/components/TaskCalendar';
+import TaskCalendarView from '@/components/TaskCalendarView';
 import TagManager from '@/components/TagManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,7 +27,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Icons
 import {
   Palette, Filter, Search, X, ListTodo, Tag, AlertCircle, Plus,
-  ChevronRight, ChevronLeft, User, Settings, Calendar, ImagePlus, Link
+  ChevronRight, ChevronLeft, ChevronDown, User, Settings, Calendar, ImagePlus, Link, List
 } from 'lucide-react';
 
 const Index = () => {
@@ -72,6 +73,9 @@ const Index = () => {
   // Calendar and Tag Manager
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [tagManagerOpen, setTagManagerOpen] = useState(false);
+
+  // View mode
+  const [viewMode, setViewMode] = useState('list'); // 'list' | 'calendar'
 
   // Settings form
   const [userName, setUserName] = useState('');
@@ -292,62 +296,76 @@ const Index = () => {
               </div>
 
               {/* User Profile */}
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 rounded-full"
-                  onClick={() => setCalendarOpen(true)}
-                  title="我的日历"
-                >
-                  <Calendar className="h-5 w-5" />
-                </Button>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" className="h-auto p-2 hover:bg-accent">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage src={user?.avatar_url} alt={user?.name} />
-                          <AvatarFallback>
-                            <User className="h-5 w-5" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium text-sm">{user?.name || '我'}</span>
-                      </div>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-48" align="end">
-                    <div className="space-y-1">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" className="h-auto p-3 hover:bg-accent">
+                    <div className="flex flex-col items-center gap-1">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={user?.avatar_url} alt={user?.name} />
+                        <AvatarFallback>
+                          <User className="h-6 w-6" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="font-medium text-sm">{user?.name || '我'}</span>
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        {viewMode === 'list' ? '列表视角' : '日历视角'}
+                        <ChevronDown className="h-3 w-3" />
+                      </span>
+                    </div>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48" align="end">
+                  <div className="space-y-1">
+                    {/* 视角切换 */}
+                    <div className="pb-2 mb-2 border-b space-y-1">
                       <Button
-                        variant="ghost"
+                        variant={viewMode === 'list' ? 'secondary' : 'ghost'}
                         className="w-full justify-start"
-                        onClick={() => setSettingsDialogOpen(true)}
+                        onClick={() => setViewMode('list')}
                       >
-                        <User className="h-4 w-4 mr-2" />
-                        个人设置
+                        <List className="h-4 w-4 mr-2" />
+                        列表视角
                       </Button>
                       <Button
-                        variant="ghost"
+                        variant={viewMode === 'calendar' ? 'secondary' : 'ghost'}
                         className="w-full justify-start"
-                        onClick={() => setTagManagerOpen(true)}
+                        onClick={() => setViewMode('calendar')}
                       >
-                        <Tag className="h-4 w-4 mr-2" />
-                        标签管理
+                        <Calendar className="h-4 w-4 mr-2" />
+                        日历视角
                       </Button>
                     </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
+                    {/* 原有菜单 */}
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={() => setSettingsDialogOpen(true)}
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      个人设置
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start"
+                      onClick={() => setTagManagerOpen(true)}
+                    >
+                      <Tag className="h-4 w-4 mr-2" />
+                      标签管理
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className={`flex-1 flex ${whiteboardOpen ? 'gap-4' : 'justify-center'} px-4 pb-4 overflow-hidden`}>
-          <div className={`flex flex-col overflow-hidden transition-all duration-500 ease-in-out ${
-            whiteboardOpen ? 'w-1/2' : 'w-full max-w-[1400px]'
-          }`}>
-            {/* Stats Cards */}
+        {viewMode === 'list' ? (
+          <div className={`flex-1 flex ${whiteboardOpen ? 'gap-4' : 'justify-center'} px-4 pb-4 overflow-hidden`}>
+            <div className={`flex flex-col overflow-hidden transition-all duration-500 ease-in-out ${
+              whiteboardOpen ? 'w-1/2' : 'w-full max-w-[1400px]'
+            }`}>
+              {/* Stats Cards */}
             <div className={`grid gap-3 mb-4 flex-shrink-0 ${whiteboardOpen ? 'grid-cols-5' : 'grid-cols-1 md:grid-cols-5 gap-4'}`}>
               <StatsCard
                 title="全部任务"
@@ -619,16 +637,24 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Whiteboard Panel */}
-          {whiteboardOpen && (
-            <div
-              className="flex flex-col overflow-hidden transition-all duration-500 ease-in-out w-1/2"
-              style={{ animation: 'slideIn 0.5s ease-in-out' }}
-            >
-              <Whiteboard onClose={() => setWhiteboardOpen(false)} />
+            {/* Whiteboard Panel */}
+            {whiteboardOpen && (
+              <div
+                className="flex flex-col overflow-hidden transition-all duration-500 ease-in-out w-1/2"
+                style={{ animation: 'slideIn 0.5s ease-in-out' }}
+              >
+                <Whiteboard onClose={() => setWhiteboardOpen(false)} />
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Calendar View */
+          <div className="flex-1 px-4 pb-4 overflow-hidden">
+            <div className="h-full max-w-[1400px] mx-auto bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-blue-100/50">
+              <TaskCalendarView tasks={tasks} onTaskClick={handleEditTask} />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Dialogs */}
