@@ -125,12 +125,16 @@ pnpm build      # 构建，生成 dist/ 目录
 
 ### 第四步：配置数据库连接
 
-编辑 `api/config.php`，填入宝塔创建的数据库信息：
+编辑 `api/config.php`，填入第二步中宝塔创建的数据库信息：
 ```php
-define('DB_NAME', 'todo_db');           // 数据库名
-define('DB_USER', 'todo_db');           // 用户名
-define('DB_PASS', '你的数据库密码');      // 密码
+define('DB_HOST', 'localhost');         // 主机，保持默认
+define('DB_NAME', 'todo_db');           // 替换为你的数据库名
+define('DB_USER', 'todo_db');           // 替换为你的数据库用户名
+define('DB_PASS', '你的数据库密码');      // 替换为你的数据库密码
+define('DB_CHARSET', 'utf8mb4');        // 字符集，保持默认
 ```
+
+> 数据库信息在宝塔「数据库」页面可以查看，密码可点击「改密」获取。
 
 ### 第五步：上传文件
 
