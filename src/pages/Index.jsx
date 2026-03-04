@@ -76,6 +76,8 @@ const Index = () => {
 
   // View mode
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'calendar'
+  const [viewPopoverOpen, setViewPopoverOpen] = useState(false);
+  const [userPopoverOpen, setUserPopoverOpen] = useState(false);
 
   // Settings form
   const [userName, setUserName] = useState('');
@@ -288,15 +290,46 @@ const Index = () => {
         <div className="flex-shrink-0 px-4 py-6">
           <div className={`${whiteboardOpen ? '' : 'max-w-[1400px] mx-auto'}`}>
             <div className="flex items-start justify-between mb-6">
-              <div className="relative">
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient">
-                  TODO
-                </h1>
-                <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-full opacity-50"></div>
+              {/* 左上角：标题 + 视角切换 */}
+              <div>
+                <div className="relative">
+                  <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient">
+                    TODO
+                  </h1>
+                  <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-full opacity-50"></div>
+                </div>
+                <Popover open={viewPopoverOpen} onOpenChange={setViewPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" className="mt-3 h-auto px-2 py-1 text-muted-foreground hover:text-foreground">
+                      <span className="text-sm">{viewMode === 'list' ? '列表视角' : '日历视角'}</span>
+                      <ChevronDown className="h-4 w-4 ml-1" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-36" align="start">
+                    <div className="space-y-1">
+                      <Button
+                        variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+                        className="w-full justify-start"
+                        onClick={() => { setViewMode('list'); setViewPopoverOpen(false); }}
+                      >
+                        <List className="h-4 w-4 mr-2" />
+                        列表视角
+                      </Button>
+                      <Button
+                        variant={viewMode === 'calendar' ? 'secondary' : 'ghost'}
+                        className="w-full justify-start"
+                        onClick={() => { setViewMode('calendar'); setViewPopoverOpen(false); }}
+                      >
+                        <Calendar className="h-4 w-4 mr-2" />
+                        日历视角
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
 
-              {/* User Profile */}
-              <Popover>
+              {/* 右上角：用户头像 + 用户名 */}
+              <Popover open={userPopoverOpen} onOpenChange={setUserPopoverOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="ghost" className="h-auto p-2 hover:bg-accent">
                     <div className="flex items-center gap-3">
@@ -306,42 +339,17 @@ const Index = () => {
                           <User className="h-5 w-5" />
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex flex-col items-start">
-                        <span className="font-medium text-sm">{user?.name || '我'}</span>
-                        <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          {viewMode === 'list' ? '列表视角' : '日历视角'}
-                          <ChevronDown className="h-3 w-3" />
-                        </span>
-                      </div>
+                      <span className="font-medium text-sm">{user?.name || '我'}</span>
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
                     </div>
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-48" align="end">
+                <PopoverContent className="w-40" align="end">
                   <div className="space-y-1">
-                    {/* 视角切换 */}
-                    <div className="pb-2 mb-2 border-b space-y-1">
-                      <Button
-                        variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-                        className="w-full justify-start"
-                        onClick={() => setViewMode('list')}
-                      >
-                        <List className="h-4 w-4 mr-2" />
-                        列表视角
-                      </Button>
-                      <Button
-                        variant={viewMode === 'calendar' ? 'secondary' : 'ghost'}
-                        className="w-full justify-start"
-                        onClick={() => setViewMode('calendar')}
-                      >
-                        <Calendar className="h-4 w-4 mr-2" />
-                        日历视角
-                      </Button>
-                    </div>
-                    {/* 原有菜单 */}
                     <Button
                       variant="ghost"
                       className="w-full justify-start"
-                      onClick={() => setSettingsDialogOpen(true)}
+                      onClick={() => { setSettingsDialogOpen(true); setUserPopoverOpen(false); }}
                     >
                       <User className="h-4 w-4 mr-2" />
                       个人设置
@@ -349,7 +357,7 @@ const Index = () => {
                     <Button
                       variant="ghost"
                       className="w-full justify-start"
-                      onClick={() => setTagManagerOpen(true)}
+                      onClick={() => { setTagManagerOpen(true); setUserPopoverOpen(false); }}
                     >
                       <Tag className="h-4 w-4 mr-2" />
                       标签管理
