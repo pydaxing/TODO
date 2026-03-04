@@ -50,6 +50,7 @@ const Index = () => {
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [updatingProgressTaskId, setUpdatingProgressTaskId] = useState(null);
+  const [initialDeadlineForNewTask, setInitialDeadlineForNewTask] = useState(null);
 
   // 从最新的 tasks 中获取正在更新进度的任务（确保数据是最新的）
   const updatingProgressTask = useMemo(() => {
@@ -204,6 +205,17 @@ const Index = () => {
 
   const handleEditTask = (task) => {
     setEditingTask(task);
+    setInitialDeadlineForNewTask(null);
+    setTaskDialogOpen(true);
+  };
+
+  // 从日历视图创建任务（带默认截止日期）
+  const handleCreateTaskFromCalendar = (date) => {
+    setEditingTask(null);
+    // 设置默认截止时间为当天 23:59:00
+    const deadline = new Date(date);
+    deadline.setHours(23, 59, 0, 0);
+    setInitialDeadlineForNewTask(deadline);
     setTaskDialogOpen(true);
   };
 
@@ -636,7 +648,7 @@ const Index = () => {
           /* Calendar View */
           <div className="flex-1 px-4 pb-4 overflow-hidden">
             <div className="h-full max-w-[1400px] mx-auto bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-blue-100/50">
-              <TaskCalendarView tasks={tasks} onTaskClick={handleEditTask} />
+              <TaskCalendarView tasks={tasks} onTaskClick={handleEditTask} onCreateTask={handleCreateTaskFromCalendar} />
             </div>
           </div>
         )}
@@ -647,11 +659,15 @@ const Index = () => {
         open={taskDialogOpen}
         onOpenChange={(open) => {
           setTaskDialogOpen(open);
-          if (!open) setEditingTask(null);
+          if (!open) {
+            setEditingTask(null);
+            setInitialDeadlineForNewTask(null);
+          }
         }}
         onSubmit={handleSaveTask}
         task={editingTask}
         allTags={allTags}
+        initialDeadline={initialDeadlineForNewTask}
       />
 
       <ProgressDialog

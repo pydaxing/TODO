@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import FileUpload from './FileUpload';
 
-const TaskDialog = ({ open, onOpenChange, onSubmit, task, allTags = [] }) => {
+const TaskDialog = ({ open, onOpenChange, onSubmit, task, allTags = [], initialDeadline = null }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -75,12 +75,14 @@ const TaskDialog = ({ open, onOpenChange, onSubmit, task, allTags = [] }) => {
         setRecurringEndSecond('00');
       }
     } else {
+      // 如果有 initialDeadline，使用它作为默认截止日期
+      const defaultDeadline = initialDeadline ? new Date(initialDeadline) : null;
       setFormData({
         title: '',
         description: '',
         priority: 'medium',
         status: 'pending',
-        deadline: null,
+        deadline: defaultDeadline,
         tags: [],
         attachments: [],
         is_recurring: false,
@@ -88,14 +90,20 @@ const TaskDialog = ({ open, onOpenChange, onSubmit, task, allTags = [] }) => {
         recurring_interval: 1,
         recurring_end_date: null,
       });
-      setDeadlineHour('23');
-      setDeadlineMinute('59');
-      setDeadlineSecond('00');
+      if (defaultDeadline) {
+        setDeadlineHour(defaultDeadline.getHours().toString().padStart(2, '0'));
+        setDeadlineMinute(defaultDeadline.getMinutes().toString().padStart(2, '0'));
+        setDeadlineSecond(defaultDeadline.getSeconds().toString().padStart(2, '0'));
+      } else {
+        setDeadlineHour('23');
+        setDeadlineMinute('59');
+        setDeadlineSecond('00');
+      }
       setRecurringEndHour('23');
       setRecurringEndMinute('59');
       setRecurringEndSecond('00');
     }
-  }, [task, open]);
+  }, [task, open, initialDeadline]);
 
   const handleSubmit = () => {
     if (!formData.title.trim()) return;
