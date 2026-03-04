@@ -26,7 +26,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Icons
 import {
   Palette, Filter, Search, X, ListTodo, Tag, AlertCircle, Plus,
-  ChevronRight, ChevronLeft, User, Settings, Trash2, Calendar, ImagePlus, Link
+  ChevronRight, ChevronLeft, User, Settings, Calendar, ImagePlus, Link
 } from 'lucide-react';
 
 const Index = () => {
@@ -252,13 +252,6 @@ const Index = () => {
     }
   };
 
-  const handleClearAllData = () => {
-    if (confirm('确定要清空所有数据吗？此操作无法撤销！')) {
-      // 清空数据库数据需要调用后端 API
-      toast.info('此功能需要后端支持，暂未实现');
-    }
-  };
-
   // 更新标签（用于标签管理组件）
   const handleUpdateTaskTags = async (taskId, updates) => {
     await taskApi.update(taskId, updates);
@@ -299,49 +292,51 @@ const Index = () => {
               </div>
 
               {/* User Profile */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" className="h-auto p-2 hover:bg-accent">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={user?.avatar_url} alt={user?.name} />
-                        <AvatarFallback>
-                          <User className="h-5 w-5" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="font-medium text-sm">{user?.name || '我'}</span>
+              <div className="flex flex-col items-end gap-1">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" className="h-auto p-2 hover:bg-accent">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={user?.avatar_url} alt={user?.name} />
+                          <AvatarFallback>
+                            <User className="h-5 w-5" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="font-medium text-sm">{user?.name || '我'}</span>
+                      </div>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-48" align="end">
+                    <div className="space-y-1">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        onClick={() => setSettingsDialogOpen(true)}
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        个人设置
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        onClick={() => setTagManagerOpen(true)}
+                      >
+                        <Tag className="h-4 w-4 mr-2" />
+                        标签管理
+                      </Button>
                     </div>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-56" align="end">
-                  <div className="space-y-2">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start"
-                      onClick={() => setSettingsDialogOpen(true)}
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      个人设置
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start"
-                      onClick={() => setCalendarOpen(true)}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      任务日历
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start"
-                      onClick={() => setTagManagerOpen(true)}
-                    >
-                      <Tag className="h-4 w-4 mr-2" />
-                      标签管理
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+                  </PopoverContent>
+                </Popover>
+                <Button
+                  variant="link"
+                  className="text-xs text-muted-foreground h-auto p-0 pr-2"
+                  onClick={() => setCalendarOpen(true)}
+                >
+                  <Calendar className="h-3 w-3 mr-1" />
+                  我的日历
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -747,19 +742,6 @@ const Index = () => {
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
               />
-            </div>
-
-            {/* 危险操作 */}
-            <div className="pt-4 border-t space-y-2">
-              <p className="text-sm font-medium text-destructive">危险操作</p>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-destructive hover:bg-destructive/10"
-                onClick={handleClearAllData}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                清空所有数据
-              </Button>
             </div>
           </div>
           <DialogFooter>
