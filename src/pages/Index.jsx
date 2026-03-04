@@ -289,15 +289,20 @@ const Index = () => {
         <div className="flex-shrink-0 px-4 py-6">
           <div className={`${whiteboardOpen ? '' : 'max-w-[1400px] mx-auto'}`}>
             <div className="flex items-start justify-between mb-6">
-              {/* 左上角：标题 */}
-              <div className="relative">
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient">
-                  TODO
-                </h1>
-                <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-full opacity-50"></div>
+              {/* 左上角：标题 + 视角标签 */}
+              <div>
+                <div className="relative">
+                  <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient">
+                    TODO
+                  </h1>
+                  <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-full opacity-50"></div>
+                </div>
+                <span className="inline-block mt-4 px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                  {viewMode === 'list' ? '列表视角' : '日历视角'}
+                </span>
               </div>
 
-              {/* 右上角：用户头像 + 用户名 + 视角标签 */}
+              {/* 右上角：用户头像 + 用户名 */}
               <Popover open={userPopoverOpen} onOpenChange={setUserPopoverOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="ghost" className="h-auto p-2 hover:bg-accent">
@@ -308,13 +313,7 @@ const Index = () => {
                           <User className="h-5 w-5" />
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex flex-col items-start gap-1">
-                        <span className="font-medium text-sm">{user?.name || '我'}</span>
-                        <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-orange-50 text-orange-600 border border-orange-200">
-                          {viewMode === 'list' ? '列表视角' : '日历视角'}
-                        </span>
-                      </div>
-                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium text-sm">{user?.name || '我'}</span>
                     </div>
                   </Button>
                 </PopoverTrigger>
