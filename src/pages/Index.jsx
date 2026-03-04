@@ -685,73 +685,44 @@ const Index = () => {
 
       {/* Settings Dialog */}
       <Dialog open={settingsDialogOpen} onOpenChange={setSettingsDialogOpen}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-xs">
           <DialogHeader>
             <DialogTitle>个人设置</DialogTitle>
           </DialogHeader>
-          <div className="py-4">
-            <div className="flex items-start gap-4">
-              {/* 左侧：头像 */}
-              <div className="flex flex-col items-center gap-2">
-                <Avatar className="h-16 w-16">
-                  <AvatarImage src={userAvatar} alt={userName} />
-                  <AvatarFallback>
-                    <User className="h-8 w-8" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex gap-1">
-                  <input
-                    ref={avatarInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarUpload}
-                    className="hidden"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 px-2 text-xs"
-                    onClick={() => avatarInputRef.current?.click()}
-                    title="上传图片"
-                  >
-                    <ImagePlus className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 px-2 text-xs"
-                    onClick={() => setAvatarInputMode(avatarInputMode === 'url' ? 'upload' : 'url')}
-                    title="使用链接"
-                  >
-                    <Link className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
+          <div className="flex items-center gap-4 py-2">
+            {/* 头像 */}
+            <div className="relative group">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={userAvatar} alt={userName} />
+                <AvatarFallback>
+                  <User className="h-8 w-8" />
+                </AvatarFallback>
+              </Avatar>
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className="hidden"
+              />
+              <button
+                onClick={() => avatarInputRef.current?.click()}
+                className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <ImagePlus className="h-5 w-5 text-white" />
+              </button>
+            </div>
 
-              {/* 右侧：用户名和头像链接 */}
-              <div className="flex-1 space-y-3">
-                <div className="space-y-1">
-                  <Label htmlFor="userName" className="text-xs">用户名</Label>
-                  <Input
-                    id="userName"
-                    placeholder="输入您的名称"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    className="h-9"
-                  />
-                </div>
-                {avatarInputMode === 'url' && (
-                  <div className="space-y-1">
-                    <Label className="text-xs">头像链接</Label>
-                    <Input
-                      placeholder="输入图片 URL"
-                      value={avatarUrl}
-                      onChange={(e) => handleAvatarUrlChange(e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                )}
-              </div>
+            {/* 用户名 */}
+            <div className="flex-1">
+              <Label htmlFor="userName" className="text-xs text-muted-foreground">用户名</Label>
+              <Input
+                id="userName"
+                placeholder="输入您的名称"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="h-9 mt-1"
+              />
             </div>
           </div>
           <DialogFooter>
