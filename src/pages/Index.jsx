@@ -684,83 +684,81 @@ const Index = () => {
       />
 
       {/* Settings Dialog */}
-      {/* Settings Dialog */}
       <Dialog open={settingsDialogOpen} onOpenChange={setSettingsDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>个人设置</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            {/* 头像设置 */}
-            <div className="space-y-3">
-              <Label>头像</Label>
-              <div className="flex items-center gap-4">
+          <div className="py-4">
+            <div className="flex items-start gap-4">
+              {/* 左侧：头像 */}
+              <div className="flex flex-col items-center gap-2">
                 <Avatar className="h-16 w-16">
                   <AvatarImage src={userAvatar} alt={userName} />
                   <AvatarFallback>
                     <User className="h-8 w-8" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 space-y-2">
-                  <Tabs value={avatarInputMode} onValueChange={setAvatarInputMode} className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="upload" className="text-xs">
-                        <ImagePlus className="h-3 w-3 mr-1" />
-                        上传图片
-                      </TabsTrigger>
-                      <TabsTrigger value="url" className="text-xs">
-                        <Link className="h-3 w-3 mr-1" />
-                        图片链接
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                  {avatarInputMode === 'upload' ? (
-                    <div>
-                      <input
-                        ref={avatarInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleAvatarUpload}
-                        className="hidden"
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
-                        onClick={() => avatarInputRef.current?.click()}
-                      >
-                        选择图片
-                      </Button>
-                      <p className="text-xs text-muted-foreground mt-1">支持 JPG、PNG，最大 2MB</p>
-                    </div>
-                  ) : (
+                <div className="flex gap-1">
+                  <input
+                    ref={avatarInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => avatarInputRef.current?.click()}
+                    title="上传图片"
+                  >
+                    <ImagePlus className="h-3 w-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => setAvatarInputMode(avatarInputMode === 'url' ? 'upload' : 'url')}
+                    title="使用链接"
+                  >
+                    <Link className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* 右侧：用户名和头像链接 */}
+              <div className="flex-1 space-y-3">
+                <div className="space-y-1">
+                  <Label htmlFor="userName" className="text-xs">用户名</Label>
+                  <Input
+                    id="userName"
+                    placeholder="输入您的名称"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    className="h-9"
+                  />
+                </div>
+                {avatarInputMode === 'url' && (
+                  <div className="space-y-1">
+                    <Label className="text-xs">头像链接</Label>
                     <Input
                       placeholder="输入图片 URL"
                       value={avatarUrl}
                       onChange={(e) => handleAvatarUrlChange(e.target.value)}
-                      className="h-8 text-sm"
+                      className="h-9"
                     />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-            </div>
-
-            {/* 用户名 */}
-            <div className="space-y-2">
-              <Label htmlFor="userName">用户名称</Label>
-              <Input
-                id="userName"
-                placeholder="输入您的名称"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSettingsDialogOpen(false)}>
+            <Button variant="outline" size="sm" onClick={() => setSettingsDialogOpen(false)}>
               取消
             </Button>
-            <Button onClick={handleSaveSettings}>
+            <Button size="sm" onClick={handleSaveSettings}>
               保存
             </Button>
           </DialogFooter>
